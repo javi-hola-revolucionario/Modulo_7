@@ -1,6 +1,11 @@
 import { supabaseUrl, supabaseKey } from "../utils/supabase";
 
 const POST_API_URL = supabaseUrl ? `${supabaseUrl}/rest/v1/posts` : null;
+const REST_HEADERS = {
+    'Content-Type': 'application/json',
+    'apikey': supabaseKey,
+    'Authorization': `Bearer ${supabaseKey}`,
+};
 
 function ensureConfig() {
     if (!supabaseUrl || !supabaseKey) {
@@ -10,12 +15,25 @@ function ensureConfig() {
 
 function getHeaders() {
     ensureConfig();
+    return REST_HEADERS;
+}
 
-    return {
-        'Content-Type': 'application/json',
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-    };
+async function handleResponse(response, fallbackMessage) {
+    if (!response.ok) {
+        let detail = fallbackMessage;
+
+        try {
+            const errorData = await response.json();
+            detail = errorData.message || errorData.error || detail;
+        } catch {
+            const text = await response.text();
+            detail = text || detail;
+        }
+
+        throw new Error(`${fallbackMessage}: ${detail}`);
+    }
+
+    return response.json();
 }
 
 // Get listar posts
@@ -25,55 +43,49 @@ export async function fetchPosts() {
         headers: getHeaders(),
     });
 
-    if (!response.ok){
-        throw new Error('Failed to fetch posts');
-    }
-
-    return response.json();
+    return handleResponse(response, 'Failed to fetch posts');
 }
 
 //post crear post
 export async function createPost(postData) {
+    const payload = {
+        title: postData.title,
+        content: postData.content,
+    };
+
     const response = await fetch(POST_API_URL, {
         method: 'POST',
         headers: getHeaders(),
-        body: JSON.stringify(postData),
+        body: JSON.stringify(payload),
     });
 
-    if (!response.ok){
-        throw new Error('Failed to create posts');
-    }
-
-    return response.json();
+    return handleResponse(response, 'Failed to create posts');
 }
 
 // put actualizar post
 
-    export async function updatePost(postId,postData) {
+export async function updatePost(postId, postData) {
+    const payload = {
+        title: postData.title,
+        content: postData.content,
+    };
+
     const response = await fetch(`${POST_API_URL}?id=eq.${postId}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: getHeaders(),
-        body: JSON.stringify(postData),
+        body: JSON.stringify(payload),
     });
 
-    if (!response.ok){
-        throw new Error('Failed to update posts');
-    }
-
-    return response.json();
-    }
+    return handleResponse(response, 'Failed to update posts');
+}
 
 // delete eliminar post
 
-    export async function deletePost(postId) {
+export async function deletePost(postId) {
     const response = await fetch(`${POST_API_URL}?id=eq.${postId}`, {
         method: 'DELETE',
         headers: getHeaders(),
     });
 
-    if (!response.ok){
-        throw new Error('Failed to delete posts');
-    }
-
-    return response.json();
-    }
+    return handleResponse(response, 'Failed to delete posts');
+}

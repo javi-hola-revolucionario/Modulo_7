@@ -1,12 +1,18 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from './utils/supabase'
 import { fetchPosts, createPost, updatePost, deletePost } from './api/postsApi'
+import './App.css'
 
 const fallbackPosts = [
   {
     id: 'demo-1',
-    title: 'Welcome to your blog',
-    content: 'Your posts will appear here once Supabase is connected.'
+    title: 'Marvel Rivals: la nueva arena de combate',
+    content: 'La comunidad sigue creciendo con nuevas estrategias, héroes y momentos épicos en cada partida.'
+  },
+  {
+    id: 'demo-2',
+    title: 'Tácticas clave para dominar el meta',
+    content: 'Conocer la sinergia entre personajes y mapear cada enfrentamiento puede cambiar el resultado de una batalla.'
   }
 ]
 
@@ -85,37 +91,80 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>My Blog</h1>
-      <form onSubmit={handleSubmit}>
+      <header className="hero-panel">
+        <div className="hero-content">
+          <div className="hero-copy">
+            <p className="eyebrow">Marvel Rivals Hub</p>
+            <h1>Tu comunidad para noticias, análisis y estrategias</h1>
+            <p className="hero-text">
+              Descubre las últimas novedades de Marvel Rivals, aprende desde los mejores jugadores y comparte tus ideas con la comunidad.
+            </p>
+          </div>
+          <div className="hero-visuals">
+            <img
+              src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=80"
+              alt="Marvel-inspired hero artwork"
+              className="hero-image hero-image-left"
+            />
+            <img
+              src="https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=900&q=80"
+              alt="Marvel-inspired hero artwork"
+              className="hero-image hero-image-right"
+            />
+          </div>
+        </div>
+      </header>
+
+      <form className="blog-form" onSubmit={handleSubmit}>
+        <h2>Publica un nuevo análisis</h2>
         <input
           type="text"
-          placeholder="Title"
+          placeholder="Título del contenido"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
         />
         <textarea
-          placeholder="Content"
+          placeholder="Comparte tu opinión, estrategia o noticia..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
           required
         />
         <button type="submit" disabled={submitting}>
-          {submitting ? 'Submitting...' : 'Submit'}
+          {submitting ? 'Publicando...' : 'Publicar entrada'}
         </button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-      <div>
-        {posts.map((post) => (
-          <div key={post.id}>
-            <h2>{post.title}</h2>
-            <p>{post.content}</p>
-            <button onClick={() => handleEdit(post)}>Edit</button>
-            <button onClick={() => handleDelete(post.id)}>Delete</button>
-          </div>
-        ))}
-      </div>
+
+      {error && <p className="status-message error">{error}</p>}
+      {successMessage && <p className="status-message success">{successMessage}</p>}
+
+      <section className="posts-section">
+        <div className="section-title">
+          <h3>Últimas entradas</h3>
+          <span>Actualizado para la comunidad</span>
+        </div>
+        <div className="posts-list">
+          {posts.map((post, index) => (
+            <article className="post-card" key={post.id}>
+              <img
+                src={index % 2 === 0
+                  ? 'https://images.unsplash.com/photo-1518516343727-3f6d6c9f5cf3?auto=format&fit=crop&w=1000&q=80'
+                  : 'https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=1000&q=80'}
+                alt={post.title}
+                className="post-image"
+              />
+              <div className="post-content">
+                <h2>{post.title}</h2>
+                <p>{post.content}</p>
+                <div className="post-actions">
+                  <button onClick={() => handleEdit(post)}>Editar</button>
+                  <button className="secondary" onClick={() => handleDelete(post.id)}>Eliminar</button>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
     </div>
   )
 }
