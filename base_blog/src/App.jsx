@@ -6,13 +6,13 @@ import './App.css'
 const fallbackPosts = [
   {
     id: 'demo-1',
-    title: 'Marvel Rivals: la nueva arena de combate',
-    content: 'La comunidad sigue creciendo con nuevas estrategias, héroes y momentos épicos en cada partida.'
+    title: 'El poder de los libros que nos cambian',
+    content: 'Cada lectura deja una huella distinta. Hoy compartimos historias que nos hicieron pensar, soñar y volver a empezar.'
   },
   {
     id: 'demo-2',
-    title: 'Tácticas clave para dominar el meta',
-    content: 'Conocer la sinergia entre personajes y mapear cada enfrentamiento puede cambiar el resultado de una batalla.'
+    title: 'Recomendaciones para una tarde de lectura',
+    content: 'Algunos libros te acompañan toda la vida. Aquí van los que más han marcado a nuestra comunidad.'
   }
 ]
 
@@ -94,21 +94,21 @@ export default function App() {
       <header className="hero-panel">
         <div className="hero-content">
           <div className="hero-copy">
-            <p className="eyebrow">Marvel Rivals Hub</p>
-            <h1>Tu comunidad para noticias, análisis y estrategias</h1>
+            <p className="eyebrow">Book Community</p>
+            <h1>Comparte tus libros favoritos con el mundo</h1>
             <p className="hero-text">
-              Descubre las últimas novedades de Marvel Rivals, aprende desde los mejores jugadores y comparte tus ideas con la comunidad.
+              Una plataforma para descubrir nuevas lecturas, guardar tus favoritos y conversar con otros amantes de los libros.
             </p>
           </div>
           <div className="hero-visuals">
             <img
-              src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=80"
-              alt="Marvel-inspired hero artwork"
+              src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=900&q=80"
+              alt="Books and reading corner"
               className="hero-image hero-image-left"
             />
             <img
-              src="https://images.unsplash.com/photo-1499364615650-ec38552f4f34?auto=format&fit=crop&w=900&q=80"
-              alt="Marvel-inspired hero artwork"
+              src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=900&q=80"
+              alt="A cozy book collection"
               className="hero-image hero-image-right"
             />
           </div>
@@ -116,22 +116,22 @@ export default function App() {
       </header>
 
       <form className="blog-form" onSubmit={handleSubmit}>
-        <h2>Publica un nuevo análisis</h2>
+        <h2>Comparte tu recomendación</h2>
         <input
           type="text"
-          placeholder="Título del contenido"
+          placeholder="Título del libro o reseña"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
         />
         <textarea
-          placeholder="Comparte tu opinión, estrategia o noticia..."
+          placeholder="Escribe por qué lo recomendaste..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
           required
         />
         <button type="submit" disabled={submitting}>
-          {submitting ? 'Publicando...' : 'Publicar entrada'}
+          {submitting ? 'Publicando...' : 'Compartir recomendación'}
         </button>
       </form>
 
@@ -140,8 +140,8 @@ export default function App() {
 
       <section className="posts-section">
         <div className="section-title">
-          <h3>Últimas entradas</h3>
-          <span>Actualizado para la comunidad</span>
+          <h3>Últimas recomendaciones</h3>
+          <span>Lo que hoy está enamorando a los lectores</span>
         </div>
         <div className="posts-list">
           {posts.map((post, index) => (
