@@ -1,67 +1,58 @@
-import { supabase } from "../utils/supabase";
+import { supabaseUrl, supabaseKey } from "../utils/supabase";
+const POSTS_API_URL = `${supabaseUrl}/rest/v1/posts`;
 
-const POST_TABLE = 'posts';
-
-function ensureClient() {
-    if (!supabase) {
-        throw new Error('Supabase client is not configured.');
-    }
+function getHeaders() {
+    return {
+        'Content-Type': 'application/json',
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+    };
 }
-
+    
+// Get listar posts
 export async function fetchPosts() {
-    ensureClient();
-
-    const { data, error } = await supabase.from(POST_TABLE).select('*').order('id', { ascending: false });
-
-    if (error) {
-        throw new Error(`Failed to fetch posts: ${error.message}`);
+    const response = await fetch(POSTS_API_URL, {
+        method: 'GET',
+        headers: getHeaders(),
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to fetch posts: ${response.error}`);
     }
-
-    return data || [];
+    return response.json();
 }
 
 export async function createPost(postData) {
-    ensureClient();
-
-    const payload = {
-        title: postData.title,
-        content: postData.content,
-    };
-
-    const { data, error } = await supabase.from(POST_TABLE).insert(payload).select();
-
-    if (error) {
-        throw new Error(`Failed to create posts: ${error.message}`);
+    const response = await fetch(POSTS_API_URL, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(postData)
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to create post: ${response.error.message}`);
     }
-
-    return data?.[0] || null;
+    return response.json();
 }
 
 export async function updatePost(postId, postData) {
-    ensureClient();
-
-    const payload = {
-        title: postData.title,
-        content: postData.content,
-    };
-
-    const { data, error } = await supabase.from(POST_TABLE).update(payload).eq('id', postId).select();
-
-    if (error) {
-        throw new Error(`Failed to update posts: ${error.message}`);
+    const response = await fetch(`${POSTS_API_URL}/${postId}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(postData)
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to update post: ${response.error.message}`);
     }
-
-    return data?.[0] || null;
+    return response.json();
 }
-
+ 
 export async function deletePost(postId) {
-    ensureClient();
-
-    const { error } = await supabase.from(POST_TABLE).delete().eq('id', postId);
-
-    if (error) {
-        throw new Error(`Failed to delete posts: ${error.message}`);
+    const response = await fetch(`${POSTS_API_URL}/${postId}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to delete post: ${response.error.message}`);
     }
-
-    return true;
+    return response.json();
 }
+ 
