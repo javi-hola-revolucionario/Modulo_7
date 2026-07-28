@@ -3,6 +3,7 @@ const app = express();
 app.use(express.json());
 const users = [];
 
+
 app.get("/", (req, res) => {
     res.json({
         message: "API funcionando"
@@ -10,15 +11,27 @@ app.get("/", (req, res) => {
 });
 
 app.post("/users", (req, res) => {
-    console.log(req.body);   
-    users.push(req.body);
+
+    const newUser = {
+    id: users.length + 1,
+    ...req.body
+};
+
+    users.push(newUser);
+
     res.json({
         message: "Usuario guardado",
-        data: req.body
+        data: newUser
     });
 });
 
-app.get("/users", (req, res) => {
+app.get("/users/:id", (req, res) => {
+    
+    const user = users.find(u => u.id === parseInt(req.params.id));
+    
+    console.log(req.params);
+    console.log(req.params.id);
+    
     res.json(users);
 });
 
