@@ -26,15 +26,25 @@ app.post("/users", (req, res) => {
 });
 
 app.get("/users/:id", (req, res) => {
-    
-    const user = users.find(u => u.id === parseInt(req.params.id));
-    
-    console.log(req.params);
-    console.log(req.params.id);
-    
-    res.json(users);
+
+    const user = users.find(
+        u => u.id === parseInt(req.params.id)
+    );
+
+    if (!user) {
+        return res.status(404).json({
+            message: "Usuario no encontrado"
+        });
+    }
+    res.json(user);
 });
 
+app.put("/users/:id", (req, res) => {
+    console.log(req.params.id);
+    console.log(req.body);
+
+});
+    
 app.listen(3000, () => {
     console.log("Servidor iniciado");
 });
