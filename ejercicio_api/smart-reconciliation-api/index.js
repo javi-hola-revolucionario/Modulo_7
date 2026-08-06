@@ -39,6 +39,11 @@ app.get("/users/:id", (req, res) => {
     res.json(user);
 });
 
+app.get("/search", (req, res) => {
+    console.log(req.query);
+    res.json(req.query);
+});
+
 app.put("/users/:id", (req, res) => {
     console.log(req.params.id);
     console.log(req.body);
